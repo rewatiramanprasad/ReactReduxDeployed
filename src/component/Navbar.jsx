@@ -12,14 +12,17 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../store/UserSlice";
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase/firebaseApp";
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+  const dispatch = useDispatch();
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -34,7 +37,12 @@ function Navbar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
+  const handleMenuItemClick = (event, index) => {
+    if (index === 3) {
+      dispatch(logoutUser());
+      signOut(auth);
+    }
+  };
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -147,8 +155,11 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+              {settings.map((setting, index) => (
+                <MenuItem
+                  key={setting}
+                  onClick={(event) => handleMenuItemClick(event, index)}
+                >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
