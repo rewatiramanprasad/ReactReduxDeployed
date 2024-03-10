@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { TextField, Button, Link } from "@mui/material";
+import signupUser from "../firebase/signupEmailPassword";
 
 const Signup = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  console.log(email, password);
+  const handleSignup = async () => {
+    const response = await signupUser(email, password);
+    console.log(response);
+  };
   return (
     <div
       style={{ display: "flex", justifyContent: "center", itemAlign: "center" }}
@@ -24,6 +32,8 @@ const Signup = () => {
               required
               fullWidth
               id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               label="Email Address"
               name="email"
               autoComplete="email"
@@ -34,6 +44,8 @@ const Signup = () => {
               required
               fullWidth
               name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               label="Password"
               type="password"
               id="password"
@@ -46,6 +58,7 @@ const Signup = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={handleSignup}
             >
               Sign Up
             </Button>
